@@ -2,35 +2,32 @@ package com.Lab01.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class Settings extends AppCompatActivity {
-
-    public static final String UserNAME_EXTRA_TAG="productName";
-
+    SharedPreferences sharedPreferences;
+    public static final String USERNAME_TAG = "tasks";
+    public static final String USERNAME_File = "SettingsFile";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setUpSaveButton();
-    }
+        Button saveButton = findViewById(R.id.save);
+        EditText username = findViewById(R.id.editTextText3);
 
-
-
-    private void setUpSaveButton(){
-
-        Button SaveButton = (Button) findViewById(R.id.save);
-
-        SaveButton.setOnClickListener(V -> {
-
-            String productName = ((EditText)findViewById(R.id.editTextText3)).getText().toString();
-
-            Intent goToOrderFromIntent = new Intent(Settings.this, MainActivity.class);
-            goToOrderFromIntent.putExtra(UserNAME_EXTRA_TAG, productName);
-            startActivity(goToOrderFromIntent);
+        saveButton.setOnClickListener(view -> {
+            sharedPreferences = getSharedPreferences(USERNAME_File, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String userName = username.getText().toString();
+            editor.putString(USERNAME_TAG, userName);
+            editor.apply();
+            Intent intent =new Intent (Settings.this, MainActivity.class);
+            startActivity(intent);
         });
     }
 }
