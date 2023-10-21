@@ -107,7 +107,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/orderFormTextView"
+        android:id="@+id/maniUserName"
         android:layout_width="168dp"
         android:layout_height="33dp"
         android:text="product here"

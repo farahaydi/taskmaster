@@ -1,35 +1,36 @@
 package com.Lab01.taskmaster;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.TextView;
-
-
 public class Details extends AppCompatActivity {
+    public static final String TASK01_TAG="task1";
+    public static final String TASK02_TAG="task2";
+    public static final String TASK03_TAG="task3";
 
-    SharedPreferences preferences;
-    String loremIpsumText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        TextView taskView = findViewById(R.id.textView9);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent getTasks = getIntent();
 
+        String task01 = getTasks.getStringExtra(TASK01_TAG);
+        if (task01 != null) {
+            taskView.setText(task01);
+        }
 
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
+        String task02 = getTasks.getStringExtra(TASK02_TAG);
+        if (task02 != null) {
+            taskView.setText(task02);
+        }
 
-        String userTask = preferences.getString(MainActivity.USER_NICKNAME_TAG, "No Tasks Found");
-
-        ((TextView)findViewById(R.id.textView9)).setText(getString(R.string.task_with_input, userTask));
-
+        String task03 = getTasks.getStringExtra(TASK03_TAG);
+        if (task03 != null) {
+            taskView.setText(task03);
+        }
     }
 
 }
