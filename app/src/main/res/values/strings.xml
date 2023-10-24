@@ -3,4 +3,7 @@
     <string name="your_task_goes_here">your task goes here</string>
     <string name="task_with_input">%1$s</string>
     <string name="user_task_will_goes_here">user Task</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Task Fragment</string>
+
 </resources>
