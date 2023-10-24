@@ -1,6 +1,8 @@
 package com.Lab01.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Lab01.taskmaster.adapter.TaskAdapter;
+import com.Lab01.taskmaster.model.Task;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,6 +86,20 @@ public class MainActivity extends AppCompatActivity {
             startActivity(taskDetails);
         });
 
+        /////////////////>>>>Lab03<<<<////////////////////////
+        RecyclerView TaskRecyclerView = findViewById(R.id.recyclerView);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        TaskRecyclerView.setLayoutManager(layoutManager);
+
+        List<Task> tasks = new ArrayList<>();
+
+        tasks.add(new Task("Task01","This is my 01 Task","assigned"));
+        tasks.add(new Task("Task02","This is my 02 Task","new"));
+        tasks.add(new Task("Task03","This is my 03 Task","complete"));
+        tasks.add(new Task("Task04","This is my 04 Task","in progress"));
+
+        TaskAdapter adapter = new TaskAdapter(tasks, this);
+        TaskRecyclerView.setAdapter(adapter);
     }
 
 
