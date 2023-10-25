@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.Lab01.taskmaster.adapter.TaskAdapter;
 import com.Lab01.taskmaster.model.Task;
+import com.Lab01.taskmaster.model.TaskState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String USERNAME_TAG="tasks";
     public static final String USERNAME_File="SettingsFile";
     public static final String TASK02_TAG="task2";
+    public static final String TASK_TAG="tasks";
     public static final String TASK03_TAG="task3";
 
     @Override
@@ -66,25 +69,30 @@ public class MainActivity extends AppCompatActivity {
 
 
         task01.setOnClickListener(view -> {
-            String taskText01 = task01.getText().toString();
+            Log.d("MainActivity", "Button 1 clicked");
+            String taskText = task01.getText().toString();
             Intent taskDetails = new Intent(MainActivity.this, Details.class);
-            taskDetails.putExtra(Details.TASK01_TAG, taskText01);
+            taskDetails.putExtra("taskText", taskText);
             startActivity(taskDetails);
         });
 
 
         task02.setOnClickListener(view -> {
-            String taskTest02=task02.getText().toString();
+            Log.d("MainActivity", "Button 2 clicked");
+            String taskText = task02.getText().toString();
             Intent taskDetails = new Intent(MainActivity.this, Details.class);
-            taskDetails.putExtra(TASK02_TAG,taskTest02);
+            taskDetails.putExtra("taskText", taskText);
             startActivity(taskDetails);
         });
+
         task03.setOnClickListener(view -> {
-            String taskText03=task03.getText().toString();
+            Log.d("MainActivity", "Button 2 clicked");
+            String taskText = task03.getText().toString();
             Intent taskDetails = new Intent(MainActivity.this, Details.class);
-            taskDetails.putExtra(TASK03_TAG,taskText03);
+            taskDetails.putExtra("taskText", taskText);
             startActivity(taskDetails);
         });
+
 
         /////////////////>>>>Lab03<<<<////////////////////////
         RecyclerView TaskRecyclerView = findViewById(R.id.recyclerView);
@@ -93,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
 
         List<Task> tasks = new ArrayList<>();
 
-        tasks.add(new Task("Task01","This is my 01 Task","assigned"));
-        tasks.add(new Task("Task02","This is my 02 Task","new"));
-        tasks.add(new Task("Task03","This is my 03 Task","complete"));
-        tasks.add(new Task("Task04","This is my 04 Task","in progress"));
+        tasks.add(new Task("Task01","This is my 01 Task", TaskState.NEW));
+        tasks.add(new Task("Task02","This is my 02 Task",TaskState.ASSIGNED));
+        tasks.add(new Task("Task03","This is my 03 Task",TaskState.IN_PROGRESS));
+        tasks.add(new Task("Task04","This is my 04 Task",TaskState.COMPLETE));
 
         TaskAdapter adapter = new TaskAdapter(tasks, this);
         TaskRecyclerView.setAdapter(adapter);

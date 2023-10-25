@@ -15,6 +15,7 @@ import com.Lab01.taskmaster.MainActivity;
 import com.Lab01.taskmaster.MainActivity4;
 import com.Lab01.taskmaster.R;
 import com.Lab01.taskmaster.model.Task;
+import com.Lab01.taskmaster.model.TaskState;
 
 import java.util.List;
 
@@ -37,17 +38,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView taskFragmentTextView = (TextView) holder.itemView.findViewById(R.id.productFragmentTextView);
         String taskTitle = tasks.get(position).getTitle();
         String taskBody =tasks.get(position).getBody();
-        String taskStatus=tasks.get(position).getState();
+        TaskState taskStatus=tasks.get(position).getState();
         taskFragmentTextView.setText(position +". "+ taskTitle);
         View productViewHolder = holder.itemView;
         TextView findTaskBody=holder.itemView.findViewById(R.id.body);
 
 
         productViewHolder.setOnClickListener(view -> {
-            Intent goToOrderFormIntent = new Intent(callingActivity, MainActivity4.class);
+            Intent goToOrderFormIntent = new Intent(callingActivity, Details.class);
             goToOrderFormIntent.putExtra("title", taskTitle);
             goToOrderFormIntent.putExtra("body", taskBody);
-            goToOrderFormIntent.putExtra("status", taskStatus);
+            goToOrderFormIntent.putExtra("status", taskStatus.toString());
             callingActivity.startActivity(goToOrderFormIntent);
         });
     }
