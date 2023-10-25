@@ -3,13 +3,22 @@ package com.Lab01.taskmaster.model;
 public class Task {
     private String title;
     private String body;
-    private String state;
+    private TaskState state;
 
-    public Task(String title, String body, String state) {
+    public Task(String title, String body, TaskState state) {
         this.title = title;
         this.body = body;
         this.state = state;
     }
+
+    public TaskState getState() {
+        return state;
+    }
+
+    public void setState(TaskState state) {
+        this.state = state;
+    }
+
 
     public String getTitle() {
         return title;
@@ -27,11 +36,4 @@ public class Task {
         this.body = body;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
 }
