@@ -1,8 +1,8 @@
-package com.Lab01.taskmaster.model;
+    package com.Lab01.taskmaster.model;
 
-public enum TaskState {
-    NEW,
-    ASSIGNED,
-    IN_PROGRESS,
-    COMPLETE
-}
+    public enum TaskState {
+        NEW,
+        ASSIGNED,
+        IN_PROGRESS,
+        COMPLETE
+    }
