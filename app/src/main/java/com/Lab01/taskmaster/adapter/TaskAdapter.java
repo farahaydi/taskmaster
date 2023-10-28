@@ -33,7 +33,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(taskFragment);
     }
 
-//    @Override
+    //    @Override
 //    public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
 //        TextView taskFragmentTextView = (TextView) holder.itemView.findViewById(R.id.productFragmentTextView);
 //        String taskTitle = tasks.get(position).getTitle();
@@ -58,28 +58,28 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //            callingActivity.startActivity(goToOrderFormIntent);
 //        });
 //    }
-@Override
-public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-    Task task = tasks.get(position);
+    @Override
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+        Task task = tasks.get(position);
 
-    TextView taskFragmentTextView = holder.itemView.findViewById(R.id.productFragmentTextView);
-    taskFragmentTextView.setText(position + ". " + task.getTitle());
+        TextView taskFragmentTextView = holder.itemView.findViewById(R.id.productFragmentTextView);
+        taskFragmentTextView.setText(position + ". " + task.getTitle());
 
-    holder.itemView.setOnClickListener(view -> {
-        Intent goToDetailsIntent = new Intent(callingActivity, Details.class);
-        goToDetailsIntent.putExtra("title", task.getTitle());
-        goToDetailsIntent.putExtra("body", task.getBody());
-        goToDetailsIntent.putExtra("status", task.getState().toString());
-        callingActivity.startActivity(goToDetailsIntent);
-    });
-}
+        holder.itemView.setOnClickListener(view -> {
+            Intent goToDetailsIntent = new Intent(callingActivity, Details.class);
+            goToDetailsIntent.putExtra("title", task.getTitle());
+            goToDetailsIntent.putExtra("body", task.getBody());
+            goToDetailsIntent.putExtra("status", task.getState().toString());
+            callingActivity.startActivity(goToDetailsIntent);
+        });
+    }
 
     @Override
     public int getItemCount() {
         return tasks.size();
     }
 
-        public static class TaskViewHolder extends RecyclerView.ViewHolder{
+    public static class TaskViewHolder extends RecyclerView.ViewHolder{
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
