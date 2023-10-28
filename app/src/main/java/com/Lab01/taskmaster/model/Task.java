@@ -43,4 +43,7 @@ public class Task {
         this.body = body;
     }
 
+    public Long getId() {
+        return id;
+    }
 }

@@ -108,14 +108,6 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView TaskRecyclerView = findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         TaskRecyclerView.setLayoutManager(layoutManager);
-
-//        List<Task> tasks = new ArrayList<>();
-//
-//        tasks.add(new Task("Task01","This is my 01 Task", TaskState.NEW));
-//        tasks.add(new Task("Task02","This is my 02 Task",TaskState.ASSIGNED));
-//        tasks.add(new Task("Task03","This is my 03 Task",TaskState.IN_PROGRESS));
-//        tasks.add(new Task("Task04","This is my 04 Task",TaskState.COMPLETE));
-
         taskAdapter = new TaskAdapter(tasks, this);
         TaskRecyclerView.setAdapter(taskAdapter);
     }

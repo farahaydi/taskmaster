@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.Lab01.taskmaster.model.TaskState;
 
 public class Details extends AppCompatActivity {
 
@@ -31,7 +30,6 @@ public class Details extends AppCompatActivity {
             String title = getTasks.getStringExtra("title");
             String body = getTasks.getStringExtra("body");
             String statusString = getTasks.getStringExtra("status");
-            TaskState status = TaskState.valueOf(statusString);
             Findtitle.setText(title);
             FindBody.setText(body);
             Findstatus.setText(statusString);
