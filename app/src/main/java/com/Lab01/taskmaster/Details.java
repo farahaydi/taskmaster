@@ -1,12 +1,9 @@
 package com.Lab01.taskmaster;
-
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
-
 public class Details extends AppCompatActivity {
 
     @Override
