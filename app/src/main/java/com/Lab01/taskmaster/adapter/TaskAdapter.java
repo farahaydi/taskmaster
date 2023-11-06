@@ -33,7 +33,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(taskFragment);
     }
 
-    //    @Override
+//    @Override
 //    public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
 //        TextView taskFragmentTextView = (TextView) holder.itemView.findViewById(R.id.productFragmentTextView);
 //        String taskTitle = tasks.get(position).getTitle();
