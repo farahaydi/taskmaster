@@ -3,8 +3,6 @@ package com.Lab01.taskmaster;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,12 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.Lab01.taskmaster.DataBase.ToDoDataBase;
 import com.Lab01.taskmaster.adapter.TaskAdapter;
 import com.Lab01.taskmaster.model.Task;
 import com.Lab01.taskmaster.model.TaskState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String USERNAME_TAG = "tasks";
     public static final String USERNAME_File = "SettingsFile";
     public static final String DATABASE_NAME = "to_do_task";
-    ToDoDataBase toDoDataBase;
     List <Task> tasks=null;
     TaskAdapter taskAdapter;
 
@@ -36,14 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toDoDataBase = Room.databaseBuilder(
-                        getApplicationContext(),
-                        ToDoDataBase.class,
-                        DATABASE_NAME)
-                .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
-                .build();
-        tasks=toDoDataBase.taskDAO().findAll();
+
+//        tasks=toDoDataBase.taskDAO().findAll();
 
         Button addTask = findViewById(R.id.button);
         Button allTasks =findViewById(R.id.button2);
@@ -105,6 +96,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         /////////////////>>>>Lab03<<<<////////////////////////
+
+        List<Task> tasks = new ArrayList<>(Arrays.asList(
+                new Task("Task01","This is my 01 Task", TaskState.COMPLETE),
+                new Task("Task02","This is my 02 Task", TaskState.NEW),
+                new Task("Task03","This is my 03 Task", TaskState.ASSIGNED),
+                new Task("Task04","This is my 04 Task", TaskState.IN_PROGRESS)
+        ));
+
         RecyclerView TaskRecyclerView = findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         TaskRecyclerView.setLayoutManager(layoutManager);
@@ -114,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        tasks.clear();
-        tasks.addAll(toDoDataBase.taskDAO().findAll());
-        taskAdapter.notifyDataSetChanged();
+//        tasks.clear();
+//        tasks.addAll(toDoDataBase.taskDAO().findAll());
+//        taskAdapter.notifyDataSetChanged();
     }
 
 

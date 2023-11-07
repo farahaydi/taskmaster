@@ -1,7 +1,6 @@
     package com.Lab01.taskmaster;
 
     import androidx.appcompat.app.AppCompatActivity;
-    import androidx.room.Room;
 
     import android.os.Bundle;
     import android.view.View;
@@ -10,15 +9,12 @@
     import android.widget.EditText;
     import android.widget.Spinner;
     import android.widget.TextView;
-    import android.widget.Toast;
 
-    import com.Lab01.taskmaster.DataBase.ToDoDataBase;
     import com.Lab01.taskmaster.model.Task;
     import com.Lab01.taskmaster.model.TaskState;
 
     public class AddTask extends AppCompatActivity {
         private int num = 0;
-        ToDoDataBase toDoDataBase;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +22,6 @@
             setContentView(R.layout.activity_addtask);
 
 
-            toDoDataBase = Room.databaseBuilder(
-                            getApplicationContext(),
-                            ToDoDataBase.class,
-                            "to_do_task")
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
-                    .build();
-            toDoDataBase.taskDAO().findAll();
 
             Spinner taskStateSpinner = findViewById(R.id.addState);
             taskStateSpinner.setAdapter(new ArrayAdapter<>(
@@ -54,7 +42,7 @@
                     TaskState.fromString(taskStateSpinner.getSelectedItem().toString()));
                     num++;
                     counter.setText(String.valueOf(num));
-                    toDoDataBase.taskDAO().insertTask(addTask);
+//                    toDoDataBase.taskDAO().insertTask(addTask);
                 }
             });
         }
