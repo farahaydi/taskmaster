@@ -3,7 +3,6 @@ package com.amplifyframework.datastore.generated.model;
 import com.amplifyframework.core.model.temporal.Temporal;
 import com.amplifyframework.core.model.ModelIdentifier;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
 
@@ -13,7 +12,6 @@ import com.amplifyframework.core.model.AuthStrategy;
 import com.amplifyframework.core.model.Model;
 import com.amplifyframework.core.model.ModelOperation;
 import com.amplifyframework.core.model.annotations.AuthRule;
-import com.amplifyframework.core.model.annotations.Index;
 import com.amplifyframework.core.model.annotations.ModelConfig;
 import com.amplifyframework.core.model.annotations.ModelField;
 import com.amplifyframework.core.model.query.predicate.QueryField;
@@ -157,7 +155,7 @@ public final class Task implements Model {
   public interface BuildStep {
     Task build();
     BuildStep id(String id);
-    BuildStep state(TaskState state);
+    BuildStep state(Object state);
   }
   
 
@@ -203,8 +201,8 @@ public final class Task implements Model {
     }
     
     @Override
-     public BuildStep state(TaskState state) {
-        this.state = state;
+     public BuildStep state(Object state) {
+        this.state = (TaskState) state;
         return this;
     }
     
@@ -237,7 +235,7 @@ public final class Task implements Model {
     }
     
     @Override
-     public CopyOfBuilder state(TaskState state) {
+     public CopyOfBuilder state(Object state) {
       return (CopyOfBuilder) super.state(state);
     }
   }

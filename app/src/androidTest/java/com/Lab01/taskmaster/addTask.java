@@ -3,7 +3,6 @@ package com.Lab01.taskmaster;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
@@ -35,14 +34,14 @@ import org.junit.runner.RunWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class AddTaskTest {
+public class addTask {
 
     @Rule
     public ActivityScenarioRule<MainActivity> mActivityScenarioRule =
             new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void addTaskTest() {
+    public void mainActivityTest() {
         ViewInteraction materialButton = onView(
                 allOf(withId(R.id.button), withText("ADD TASK"),
                         childAtPosition(
@@ -54,17 +53,17 @@ public class AddTaskTest {
         materialButton.perform(click());
 
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.editTextText), withText("Enter Your Task .."),
+                allOf(withId(R.id.addTaskEditText), withText("Enter Your Task .."),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
                                 4),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("TTask01"));
+        appCompatEditText.perform(replaceText("test"));
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.editTextText), withText("TTask01"),
+                allOf(withId(R.id.addTaskEditText), withText("test"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -74,17 +73,17 @@ public class AddTaskTest {
         appCompatEditText2.perform(closeSoftKeyboard());
 
         ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.editTextText2), withText("Add A Descreption .."),
+                allOf(withId(R.id.addDescEditText), withText("Add A Descreption .."),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText3.perform(replaceText("Descreption"));
+        appCompatEditText3.perform(replaceText("Add des test"));
 
         ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.editTextText2), withText("Descreption"),
+                allOf(withId(R.id.addDescEditText), withText("Add des test"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -92,46 +91,6 @@ public class AddTaskTest {
                                 0),
                         isDisplayed()));
         appCompatEditText4.perform(closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.editTextText2), withText("Descreption"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText5.perform(click());
-
-        ViewInteraction appCompatEditText6 = onView(
-                allOf(withId(R.id.editTextText2), withText("Descreption"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText6.perform(click());
-
-        ViewInteraction appCompatEditText7 = onView(
-                allOf(withId(R.id.editTextText2), withText("Descreption"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText7.perform(replaceText("Descreption01"));
-
-        ViewInteraction appCompatEditText8 = onView(
-                allOf(withId(R.id.editTextText2), withText("Descreption01"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText8.perform(closeSoftKeyboard());
 
         ViewInteraction appCompatSpinner = onView(
                 allOf(withId(R.id.addState),
@@ -147,11 +106,11 @@ public class AddTaskTest {
                 .inAdapterView(childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
-                .atPosition(1);
+                .atPosition(0);
         materialTextView.perform(click());
 
         ViewInteraction materialButton2 = onView(
-                allOf(withId(R.id.button3), withText("Add Task"),
+                allOf(withId(R.id.addTaskButton), withText("Add Task"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -160,14 +119,12 @@ public class AddTaskTest {
                         isDisplayed()));
         materialButton2.perform(click());
 
-        pressBack();
-
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.recyclerView),
                         childAtPosition(
                                 withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
                                 9)));
-        recyclerView.perform(actionOnItemAtPosition(0, click()));
+        recyclerView.perform(actionOnItemAtPosition(2, click()));
     }
 
     private static Matcher<View> childAtPosition(

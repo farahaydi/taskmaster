@@ -14,8 +14,8 @@ import com.Lab01.taskmaster.Details;
 import com.Lab01.taskmaster.MainActivity;
 import com.Lab01.taskmaster.MainActivity4;
 import com.Lab01.taskmaster.R;
-import com.Lab01.taskmaster.model.Task;
 import com.Lab01.taskmaster.model.TaskState;
+import com.amplifyframework.datastore.generated.model.Task;
 
 import java.util.List;
 
@@ -26,7 +26,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public TaskAdapter(List<Task> tasks, Context callingActivity) {
         this.tasks = tasks;
         this.callingActivity = callingActivity;
-    }    @NonNull
+    }
+
+
+
+    @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View taskFragment = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_task, parent,false);
