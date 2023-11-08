@@ -7,7 +7,7 @@
     tools:context=".AddTask">
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/addDescEditText"
         android:layout_width="270dp"
         android:layout_height="60dp"
         android:layout_marginTop="4dp"
@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.138"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/addTaskEditText" />
 
     <TextView
         android:id="@+id/textView"
@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/addTaskEditText"
         android:layout_width="255dp"
         android:layout_height="60dp"
     android:layout_marginTop="8dp"
@@ -74,7 +74,7 @@
     app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/addTaskButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
@@ -82,7 +82,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.438"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+        app:layout_constraintTop_toBottomOf="@+id/addDescEditText" />
 
     <TextView
         android:id="@+id/textView4"
@@ -94,7 +94,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.107"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/addTaskButton"
         app:layout_constraintVertical_bias="0.239" />
 
     <TextView
@@ -108,7 +108,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.007"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/addTaskButton"
         app:layout_constraintVertical_bias="0.191" />
 
     <TextView
@@ -116,23 +116,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Set State :"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/addTaskButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.092"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2"
+        app:layout_constraintTop_toBottomOf="@+id/addDescEditText"
         app:layout_constraintVertical_bias="0.422" />
 
     <Spinner
         android:id="@+id/addState"
         android:layout_width="170dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="36dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="55dp"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/addTaskButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.287"
         app:layout_constraintStart_toEndOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2"
+        app:layout_constraintTop_toBottomOf="@+id/addDescEditText"
         app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
