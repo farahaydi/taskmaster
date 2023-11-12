@@ -13,6 +13,8 @@ type Task @model @auth(rules:[{allow: public}]){
   title: String!
   body: String!
   state:TaskState
+  contactId: ID! @index(name: "byContact", sortKeyFields:["title"])
+  contactPerson: contact @belongsTo(fields: ["contactId"])
 }
 
 enum TaskState{
@@ -20,4 +22,11 @@ enum TaskState{
   Assigned
   In Progress
   Complete
+}
+type contact @model @auth(rules: [{allow: public}])
+{
+  id: ID!
+  email: String!
+  fullName: String
+  tasks: [Task] @hasMany(indexName: "byContact", fields: ["id"])
 }
