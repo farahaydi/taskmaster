@@ -2,17 +2,18 @@
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
 input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
 
-#type Todo @model {
-#  id: ID!
-#  name: String!
-#  description: String
-#}
-
+type Todo @model {
+  id: ID!
+  name: String!
+  description: String
+}
 type Task @model @auth(rules:[{allow: public}]){
   id:ID!
   title: String!
   body: String!
   state:TaskState
+  teamId:ID! @index (name:"byTeam", sortKeyFields:["title"])
+  teamTask:Team @belongsTo(fields:["teamId"])
 }
 
 enum TaskState{
@@ -20,4 +21,9 @@ enum TaskState{
   Assigned
   In Progress
   Complete
+}
+type Team @model @auth(rules: [{ allow: public }]) {
+  id:ID!
+  name:String!
+  tasks:[Task] @hasMany(indexName:"byTeam", fields:["id"])
 }
