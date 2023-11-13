@@ -2,7 +2,6 @@ package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.annotations.HasMany;
 import com.amplifyframework.core.model.temporal.Temporal;
-import com.amplifyframework.core.model.ModelIdentifier;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,19 +20,17 @@ import com.amplifyframework.core.model.query.predicate.QueryField;
 
 import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 
-/** This is an auto generated class representing the contact type in your schema. */
+/** This is an auto generated class representing the Team type in your schema. */
 @SuppressWarnings("all")
-@ModelConfig(pluralName = "contacts", type = Model.Type.USER, version = 1, authRules = {
+@ModelConfig(pluralName = "Teams",  authRules = {
   @AuthRule(allow = AuthStrategy.PUBLIC, operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
-public final class contact implements Model {
-  public static final QueryField ID = field("contact", "id");
-  public static final QueryField EMAIL = field("contact", "email");
-  public static final QueryField FULL_NAME = field("contact", "fullName");
+public final class Team implements Model {
+  public static final QueryField ID = field("Team", "id");
+  public static final QueryField NAME = field("Team", "name");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="String", isRequired = true) String email;
-  private final @ModelField(targetType="String") String fullName;
-  private final @ModelField(targetType="Task") @HasMany(associatedWith = "contactPerson", type = Task.class) List<Task> tasks = null;
+  private final @ModelField(targetType="String", isRequired = true) String name;
+  private final @ModelField(targetType="Task") @HasMany(associatedWith = "teamTask", type = Task.class) List<Task> tasks = null;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   /** @deprecated This API is internal to Amplify and should not be used. */
@@ -46,12 +43,8 @@ public final class contact implements Model {
       return id;
   }
   
-  public String getEmail() {
-      return email;
-  }
-  
-  public String getFullName() {
-      return fullName;
+  public String getName() {
+      return name;
   }
   
   public List<Task> getTasks() {
@@ -66,10 +59,9 @@ public final class contact implements Model {
       return updatedAt;
   }
   
-  private contact(String id, String email, String fullName) {
+  private Team(String id, String name) {
     this.id = id;
-    this.email = email;
-    this.fullName = fullName;
+    this.name = name;
   }
   
   @Override
@@ -79,12 +71,11 @@ public final class contact implements Model {
       } else if(obj == null || getClass() != obj.getClass()) {
         return false;
       } else {
-      contact contact = (contact) obj;
-      return ObjectsCompat.equals(getId(), contact.getId()) &&
-              ObjectsCompat.equals(getEmail(), contact.getEmail()) &&
-              ObjectsCompat.equals(getFullName(), contact.getFullName()) &&
-              ObjectsCompat.equals(getCreatedAt(), contact.getCreatedAt()) &&
-              ObjectsCompat.equals(getUpdatedAt(), contact.getUpdatedAt());
+      Team team = (Team) obj;
+      return ObjectsCompat.equals(getId(), team.getId()) &&
+              ObjectsCompat.equals(getName(), team.getName()) &&
+              ObjectsCompat.equals(getCreatedAt(), team.getCreatedAt()) &&
+              ObjectsCompat.equals(getUpdatedAt(), team.getUpdatedAt());
       }
   }
   
@@ -92,8 +83,7 @@ public final class contact implements Model {
    public int hashCode() {
     return new StringBuilder()
       .append(getId())
-      .append(getEmail())
-      .append(getFullName())
+      .append(getName())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -103,17 +93,16 @@ public final class contact implements Model {
   @Override
    public String toString() {
     return new StringBuilder()
-      .append("contact {")
+      .append("Team {")
       .append("id=" + String.valueOf(getId()) + ", ")
-      .append("email=" + String.valueOf(getEmail()) + ", ")
-      .append("fullName=" + String.valueOf(getFullName()) + ", ")
+      .append("name=" + String.valueOf(getName()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
       .toString();
   }
   
-  public static EmailStep builder() {
+  public static NameStep builder() {
       return new Builder();
   }
   
@@ -125,65 +114,53 @@ public final class contact implements Model {
    * @param id the id of the existing item this instance will represent
    * @return an instance of this model with only ID populated
    */
-  public static contact justId(String id) {
-    return new contact(
+  public static Team justId(String id) {
+    return new Team(
       id,
-      null,
       null
     );
   }
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
-      email,
-      fullName);
+      name);
   }
-  public interface EmailStep {
-    BuildStep email(String email);
+  public interface NameStep {
+    BuildStep name(String name);
   }
   
 
   public interface BuildStep {
-    contact build();
+    Team build();
     BuildStep id(String id);
-    BuildStep fullName(String fullName);
   }
   
 
-  public static class Builder implements EmailStep, BuildStep {
+  public static class Builder implements NameStep, BuildStep {
     private String id;
-    private String email;
-    private String fullName;
+    private String name;
     public Builder() {
       
     }
     
-    private Builder(String id, String email, String fullName) {
+    private Builder(String id, String name) {
       this.id = id;
-      this.email = email;
-      this.fullName = fullName;
+      this.name = name;
     }
     
     @Override
-     public contact build() {
+     public Team build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
         
-        return new contact(
+        return new Team(
           id,
-          email,
-          fullName);
+          name);
     }
     
     @Override
-     public BuildStep email(String email) {
-        Objects.requireNonNull(email);
-        this.email = email;
-        return this;
-    }
-    
-    @Override
-     public BuildStep fullName(String fullName) {
-        this.fullName = fullName;
+     public BuildStep name(String name) {
+        Objects.requireNonNull(name);
+        this.name = name;
         return this;
     }
     
@@ -199,28 +176,18 @@ public final class contact implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String email, String fullName) {
-      super(id, email, fullName);
-      Objects.requireNonNull(email);
+    private CopyOfBuilder(String id, String name) {
+      super(id, name);
+      Objects.requireNonNull(name);
     }
     
     @Override
-     public CopyOfBuilder email(String email) {
-      return (CopyOfBuilder) super.email(email);
-    }
-    
-    @Override
-     public CopyOfBuilder fullName(String fullName) {
-      return (CopyOfBuilder) super.fullName(fullName);
+     public CopyOfBuilder name(String name) {
+      return (CopyOfBuilder) super.name(name);
     }
   }
   
 
-  public static class contactIdentifier extends ModelIdentifier<contact> {
-    private static final long serialVersionUID = 1L;
-    public contactIdentifier(String id) {
-      super(id);
-    }
-  }
+
   
 }

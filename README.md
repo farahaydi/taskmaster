@@ -49,3 +49,9 @@ on this task we start dealing with Espresso test,It's specifically designed for 
 on this lab i'm start working with DynamoDB, store and retrive the data from it .
 ![DB](./screenshots/Dynmo.png)
 ![home](./screenshots/img.png)
+
+# Lab : class 33
+on this lab I'm start dealing with one to many relationship on the data base 
+![home](screenshots/AwsHome.png)
+![settings](screenshots/settingss.png)
+![add](screenshots/addTaskAwss.png)
