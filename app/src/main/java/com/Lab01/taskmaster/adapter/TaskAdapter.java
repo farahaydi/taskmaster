@@ -1,5 +1,7 @@
 package com.Lab01.taskmaster.adapter;
 
+import static com.Lab01.taskmaster.MainActivity.TASK_ID_TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Lab01.taskmaster.Details;
+import com.Lab01.taskmaster.EditTask;
 import com.Lab01.taskmaster.MainActivity;
 import com.Lab01.taskmaster.MainActivity4;
 import com.Lab01.taskmaster.R;
@@ -44,10 +47,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         taskFragmentTextView.setText(position + ". " + task.getTitle());
 
         holder.itemView.setOnClickListener(view -> {
-            Intent goToDetailsIntent = new Intent(callingActivity, Details.class);
+            Intent goToDetailsIntent = new Intent(callingActivity, EditTask.class);
             goToDetailsIntent.putExtra("title", task.getTitle());
             goToDetailsIntent.putExtra("body", task.getBody());
             goToDetailsIntent.putExtra("status", task.getState().toString());
+            goToDetailsIntent.putExtra(TASK_ID_TAG, task.getId());
             callingActivity.startActivity(goToDetailsIntent);
         });
     }
