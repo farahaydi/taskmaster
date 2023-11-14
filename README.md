@@ -55,3 +55,10 @@ on this lab I'm start dealing with one to many relationship on the data base
 ![home](screenshots/AwsHome.png)
 ![settings](screenshots/settingss.png)
 ![add](screenshots/addTaskAwss.png)
+
+# Lab :class34
+on this lab i'm working on update and delete a task from Db
+![EditTask](./screenshots/editTask.png)
+![homeEdit](./screenshots/homeEdit.png)
+![Delete](./screenshots/delte.png)
+

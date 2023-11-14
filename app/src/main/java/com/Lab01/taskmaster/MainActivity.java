@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     //    public static  final String DATABASE_NAME = "tasks_stuff";
 //    TaskDatabase taskDatabase;
+    public static final String TASK_ID_TAG ="Task Id Tag";
+
     private String selectedTeam;
     public static final String TAG="homeActivity";
     private TaskAdapter taskAdapter;
