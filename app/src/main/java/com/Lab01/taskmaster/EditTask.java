@@ -115,7 +115,7 @@ public class EditTask extends AppCompatActivity {
                 this,
                 android.R.layout.simple_spinner_item,
                 TaskState.values()));
-        taskStatusSpinner.setSelection(getSpinnerIndex(taskStatusSpinner, taskToEdit.getTeamTask().toString()));
+        taskStatusSpinner.setSelection(getSpinnerIndex(taskStatusSpinner, taskToEdit.getState().toString()));
     }
 
     private int getSpinnerIndex(Spinner spinner, String stringValueToCheck) {
