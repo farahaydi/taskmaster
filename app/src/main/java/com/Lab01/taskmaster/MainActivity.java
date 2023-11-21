@@ -27,6 +27,10 @@ import com.amplifyframework.datastore.generated.model.Task;
 import com.amplifyframework.datastore.generated.model.TaskState;
 import com.amplifyframework.datastore.generated.model.Team;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +110,38 @@ public class MainActivity extends AppCompatActivity {
 //                .allowMainThreadQueries()
 //                .build();
 //        tasks= taskDatabase.taskDao().findAll();
+
+        //>>>>>>>>>>>Lab37<<<<<<<<<<<<<<<<<
+
+        String emptyFilename= "emptyTestFileName";
+        File emptyFile = new File(getApplicationContext().getFilesDir(), emptyFilename);
+
+        try {
+            BufferedWriter emptyFileBufferedWriter= new BufferedWriter(new FileWriter(emptyFile));
+
+            emptyFileBufferedWriter.append("Some text here from Farah\nAnother libe from Farah");
+
+            emptyFileBufferedWriter.close();
+        }catch (IOException ioe){
+            Log.i(TAG, "could not write locally with filename: "+ emptyFilename);
+        }
+
+        String emptyFileS3Key = "someFileOnS3.txt";
+        Amplify.Storage.uploadFile(
+                emptyFileS3Key,
+                emptyFile,
+                success ->
+                {
+                    Log.i(TAG, "S3 upload succeeded and the Key is: " + success.getKey());
+                },
+                failure ->
+                {
+                    Log.i(TAG, "S3 upload failed! " + failure.getMessage());
+                }
+        );
+
+
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         selectedTeam = sharedPreferences.getString(Settings.TEAM_TAG, "");
