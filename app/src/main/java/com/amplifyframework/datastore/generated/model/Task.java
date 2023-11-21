@@ -31,16 +31,17 @@ public final class Task implements Model {
   public static final QueryField TITLE = field("Task", "title");
   public static final QueryField BODY = field("Task", "body");
   public static final QueryField STATE = field("Task", "state");
+  public static final QueryField TASK_IMAGE_S3_KEY = field("Task", "taskImageS3Key");
   public static final QueryField TEAM_TASK = field("Task", "teamId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String title;
   private final @ModelField(targetType="String", isRequired = true) String body;
   private final @ModelField(targetType="TaskState") TaskState state;
+  private final @ModelField(targetType="String") String taskImageS3Key;
   private final @ModelField(targetType="Team") @BelongsTo(targetName = "teamId", type = Team.class) Team teamTask;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
-
-    /** @deprecated This API is internal to Amplify and should not be used. */
+  /** @deprecated This API is internal to Amplify and should not be used. */
   @Deprecated
    public String resolveIdentifier() {
     return id;
@@ -62,6 +63,10 @@ public final class Task implements Model {
       return state;
   }
   
+  public String getTaskImageS3Key() {
+      return taskImageS3Key;
+  }
+  
   public Team getTeamTask() {
       return teamTask;
   }
@@ -74,11 +79,12 @@ public final class Task implements Model {
       return updatedAt;
   }
   
-  private Task(String id, String title, String body, TaskState state, Team teamTask) {
+  private Task(String id, String title, String body, TaskState state, String taskImageS3Key, Team teamTask) {
     this.id = id;
     this.title = title;
     this.body = body;
     this.state = state;
+    this.taskImageS3Key = taskImageS3Key;
     this.teamTask = teamTask;
   }
   
@@ -94,6 +100,7 @@ public final class Task implements Model {
               ObjectsCompat.equals(getTitle(), task.getTitle()) &&
               ObjectsCompat.equals(getBody(), task.getBody()) &&
               ObjectsCompat.equals(getState(), task.getState()) &&
+              ObjectsCompat.equals(getTaskImageS3Key(), task.getTaskImageS3Key()) &&
               ObjectsCompat.equals(getTeamTask(), task.getTeamTask()) &&
               ObjectsCompat.equals(getCreatedAt(), task.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), task.getUpdatedAt());
@@ -107,6 +114,7 @@ public final class Task implements Model {
       .append(getTitle())
       .append(getBody())
       .append(getState())
+      .append(getTaskImageS3Key())
       .append(getTeamTask())
       .append(getCreatedAt())
       .append(getUpdatedAt())
@@ -122,6 +130,7 @@ public final class Task implements Model {
       .append("title=" + String.valueOf(getTitle()) + ", ")
       .append("body=" + String.valueOf(getBody()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
+      .append("taskImageS3Key=" + String.valueOf(getTaskImageS3Key()) + ", ")
       .append("teamTask=" + String.valueOf(getTeamTask()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
@@ -147,6 +156,7 @@ public final class Task implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -156,6 +166,7 @@ public final class Task implements Model {
       title,
       body,
       state,
+      taskImageS3Key,
       teamTask);
   }
   public interface TitleStep {
@@ -165,7 +176,6 @@ public final class Task implements Model {
 
   public interface BodyStep {
     BuildStep body(String body);
-
   }
   
 
@@ -173,6 +183,7 @@ public final class Task implements Model {
     Task build();
     BuildStep id(String id);
     BuildStep state(TaskState state);
+    BuildStep taskImageS3Key(String taskImageS3Key);
     BuildStep teamTask(Team teamTask);
   }
   
@@ -182,16 +193,18 @@ public final class Task implements Model {
     private String title;
     private String body;
     private TaskState state;
+    private String taskImageS3Key;
     private Team teamTask;
     public Builder() {
       
     }
     
-    private Builder(String id, String title, String body, TaskState state, Team teamTask) {
+    private Builder(String id, String title, String body, TaskState state, String taskImageS3Key, Team teamTask) {
       this.id = id;
       this.title = title;
       this.body = body;
       this.state = state;
+      this.taskImageS3Key = taskImageS3Key;
       this.teamTask = teamTask;
     }
     
@@ -204,6 +217,7 @@ public final class Task implements Model {
           title,
           body,
           state,
+          taskImageS3Key,
           teamTask);
     }
     
@@ -228,6 +242,12 @@ public final class Task implements Model {
     }
     
     @Override
+     public BuildStep taskImageS3Key(String taskImageS3Key) {
+        this.taskImageS3Key = taskImageS3Key;
+        return this;
+    }
+    
+    @Override
      public BuildStep teamTask(Team teamTask) {
         this.teamTask = teamTask;
         return this;
@@ -245,8 +265,8 @@ public final class Task implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, TaskState state, Team teamTask) {
-      super(id, title, body, state, teamTask);
+    private CopyOfBuilder(String id, String title, String body, TaskState state, String taskImageS3Key, Team teamTask) {
+      super(id, title, body, state, taskImageS3Key, teamTask);
       Objects.requireNonNull(title);
       Objects.requireNonNull(body);
     }
@@ -264,6 +284,11 @@ public final class Task implements Model {
     @Override
      public CopyOfBuilder state(TaskState state) {
       return (CopyOfBuilder) super.state(state);
+    }
+    
+    @Override
+     public CopyOfBuilder taskImageS3Key(String taskImageS3Key) {
+      return (CopyOfBuilder) super.taskImageS3Key(taskImageS3Key);
     }
     
     @Override

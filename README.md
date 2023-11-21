@@ -62,3 +62,9 @@ on this lab i'm working on update and delete a task from Db
 ![homeEdit](./screenshots/homeEdit.png)
 ![Delete](./screenshots/delte.png)
 
+
+# lab :class37
+To integrate image storage in your Android app using Amazon S3 and AWS Amplify, first, create an S3 bucket on the AWS Management Console. Then, configure Amplify to work with your S3 bucket. When a user uploads an image, use Amplify's Storage category to easily upload the image file to S3, specifying a unique key. For image retrieval, download the file from S3 using Amplify, and display it in your app. Optionally, enable users to delete images by removing the corresponding file from the S3 bucket. Amplify simplifies these operations, providing a seamless way to manage images stored in S3 within your Android application.
+[editImage](screenshots/editImage.png)
+[addImage](screenshots/addS3Image.png)
+
