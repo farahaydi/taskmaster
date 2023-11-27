@@ -39,7 +39,15 @@
             android:exported="false" />
         <activity
             android:name=".AddTask"
-            android:exported="false" />
+            android:exported="true" >
+        <intent-filter android:label="Grab text or image for new product"> <!-- this is the text that shows up when the user is picking an app to handle the intent -->
+            <action android:name="android.intent.action.SEND" /> <!-- this will register our activity as being able to process this intent -->
+            <category android:name="android.intent.category.DEFAULT" /> <!-- this is needed for all implicit intents -->
+            <data android:mimeType="text/plain" />
+            <data android:mimeType="image/*" />
+        </intent-filter>
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
