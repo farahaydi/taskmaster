@@ -66,6 +66,54 @@ public class AddTask extends AppCompatActivity {
         setUpDeleteImageButton();
         updateImageButtons();
     }
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        Intent callingIntent = getIntent();
+        if (callingIntent != null && callingIntent.getType() != null && callingIntent.getType().equals("text/plain")) {
+            String callingText = callingIntent.getStringExtra(Intent.EXTRA_TEXT);
+
+            if (callingText != null) {
+                String cleanedText = cleanText(callingText);
+
+                ((EditText) findViewById(R.id.titleEditText)).setText(cleanedText);
+            }
+        }
+
+        if(callingIntent != null && callingIntent.getType() != null && callingIntent.getType().startsWith("image") ){
+            Uri incomingImageFileUri= callingIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+            if (incomingImageFileUri != null){
+                InputStream incomingImageFileInputStream = null;
+
+                try {
+                    incomingImageFileInputStream = getContentResolver().openInputStream(incomingImageFileUri);
+
+                    ImageView productImageView = findViewById(R.id.editProductImageImageView);
+
+                    if (productImageView != null) {
+
+                        productImageView.setImageBitmap(BitmapFactory.decodeStream(incomingImageFileInputStream));
+                    }else {
+                        Log.e(TAG, "ImageView is null for some reasons");
+                    }
+                }catch (FileNotFoundException fnfe){
+                    Log.e(TAG," Could not get file stream from the URI "+fnfe.getMessage(),fnfe);
+                }
+            }
+        }
+
+    }
+    private String cleanText(String text) {
+        text = text.replaceAll("\\b(?:https?|ftp):\\/\\/\\S+\\b", "");
+
+        text = text.replaceAll("\"", "");
+
+        return text;
+    }
+
 
     private void setUpSpinners() {
         teamSpinner = findViewById(R.id.teamSpinnerStin);
@@ -161,21 +209,27 @@ public class AddTask extends AppCompatActivity {
     }
 
     private void setUpDeleteImageButton() {
-        Button deleteImageButton = findViewById(R.id.editProductDeleteImageButton);
-        deleteImageButton.setOnClickListener(v -> {
+        Button deleteImageButton = (Button)findViewById(R.id.editProductDeleteImageButton);
+        String s3ImageKey = this.s3ImageKey;
+        deleteImageButton.setOnClickListener(v ->
+        {
             Amplify.Storage.remove(
                     s3ImageKey,
-                    success -> {
+                    success ->
+                    {
                         Log.i(TAG, "Succeeded in deleting file on S3! Key is: " + success.getKey());
+
                     },
-                    failure -> {
+                    failure ->
+                    {
                         Log.e(TAG, "Failure in deleting file on S3 with key: " + s3ImageKey + " with error: " + failure.getMessage());
                     }
             );
             ImageView productImageView = findViewById(R.id.editProductImageImageView);
             productImageView.setImageResource(android.R.color.transparent);
 
-            saveTask("");  // Empty string to clear the image key
+            saveTask("");
+            switchFromDeleteButtonToAddButton(deleteImageButton);
         });
     }
 
@@ -232,16 +286,15 @@ public class AddTask extends AppCompatActivity {
     private void uploadInputStreamToS3(InputStream pickedImageInputStream, String pickedImageFilename,Uri pickedImageFileUri)
     {
         Amplify.Storage.uploadInputStream(
-                pickedImageFilename,  // S3 key
+                pickedImageFilename,
                 pickedImageInputStream,
                 success ->
                 {
                     Log.i(TAG, "Succeeded in getting file uploaded to S3! Key is: " + success.getKey());
-                    // Part 4: Update/save our Product object to have an image key
                     saveTask(success.getKey());
                     updateImageButtons();
                     ImageView productImageView = findViewById(R.id.editProductImageImageView);
-                    InputStream pickedImageInputStreamCopy = null;  // need to make a copy because InputStreams cannot be reused!
+                    InputStream pickedImageInputStreamCopy = null;
                     try
                     {
                         pickedImageInputStreamCopy = getContentResolver().openInputStream(pickedImageFileUri);
@@ -297,6 +350,8 @@ public class AddTask extends AppCompatActivity {
         }
         return result;
     }
+
+
 
     public static TaskState taskStateFromString(String inputProductCategoryText) {
         for (TaskState taskState : TaskState.values()) {
