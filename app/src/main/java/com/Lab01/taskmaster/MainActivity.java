@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
             logoutButton.setVisibility(View.VISIBLE);
 
-            String username2 = username; // ugly way for lambda hack
+            String username2 = username;
             Amplify.Auth.fetchUserAttributes(
                     success ->
                     {

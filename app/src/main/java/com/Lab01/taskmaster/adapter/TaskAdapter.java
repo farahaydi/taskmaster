@@ -47,11 +47,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         taskFragmentTextView.setText(position + ". " + task.getTitle());
 
         holder.itemView.setOnClickListener(view -> {
-            Intent goToDetailsIntent = new Intent(callingActivity, EditTask.class);
+            Intent goToDetailsIntent = new Intent(callingActivity, Details.class);
             goToDetailsIntent.putExtra("title", task.getTitle());
             goToDetailsIntent.putExtra("body", task.getBody());
             goToDetailsIntent.putExtra("status", task.getState().toString());
             goToDetailsIntent.putExtra("imageKey", task.getTaskImageS3Key());
+            goToDetailsIntent.putExtra("taskLongitude", task.getTaskLongitude());
+            goToDetailsIntent.putExtra("taskLatitude", task.getTaskLatitude());
             goToDetailsIntent.putExtra(TASK_ID_TAG, task.getId());
             callingActivity.startActivity(goToDetailsIntent);
         });

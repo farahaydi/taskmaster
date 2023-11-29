@@ -7,7 +7,7 @@
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-01-20T19:38:15.089Z",
+              "apiKeyExpirationDate": "2024-01-28T12:11:00.492Z",
               "apiKeyExpirationDays": 60,
               "description": "create a taskMaster Project"
             },
