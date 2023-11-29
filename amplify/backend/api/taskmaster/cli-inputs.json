@@ -6,7 +6,7 @@
     "defaultAuthType": {
       "mode": "API_KEY",
       "expirationTime": 60,
-      "apiKeyExpirationDate": "2024-01-20T19:38:15.089Z",
+      "apiKeyExpirationDate": "2024-01-28T12:11:00.492Z",
       "keyDescription": "create a taskMaster Project"
     },
     "conflictResolution": {},

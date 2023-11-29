@@ -4,13 +4,17 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
@@ -21,20 +25,35 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
+import com.amplifyframework.core.model.temporal.Temporal;
 import com.amplifyframework.datastore.generated.model.Task;
 import com.amplifyframework.datastore.generated.model.TaskState;
 import com.amplifyframework.datastore.generated.model.Team;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+
+import android.Manifest;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+
 
 public class AddTask extends AppCompatActivity {
     public static final String TAG = "AddTask";
@@ -46,22 +65,97 @@ public class AddTask extends AppCompatActivity {
     private EditText descriptionEditText;
     private Spinner taskStatusSpinner = null;
     private ActivityResultLauncher<Intent> activityResultLauncher;
+    static final int LOCATION_POLLING_INTERVAL = 5 * 1000;
+    Geocoder geocoder=null;
     private String s3ImageKey = "";
 
     private CompletableFuture<Task> taskCompletableFuture = null;
 
     private Task taskToEdit = null;
+    FusedLocationProviderClient locationProviderClient = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addtask);
 
+        // Initialize future for fetching teams
         teamFuture = new CompletableFuture<>();
+
+        // Initialize activity result launcher for image picking
         activityResultLauncher = getImagePickingActivityResultLauncher();
 
+        // Initialize task status spinner
+        taskStatusSpinner = findViewById(R.id.addStateSpinner);
+
+        // Request location permission
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        // Initialize location provider client
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+
+        // Check if location permission is granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                // If location is not null, log latitude and longitude
+                String currentLatitude = Double.toString(location.getLatitude());
+                String currentLongitude = Double.toString(location.getLongitude());
+                Log.i(TAG, "Our userLatitude: " + currentLatitude);
+                Log.i(TAG, "Our userLongitude: " + currentLongitude);
+            } else {
+                // If location is null, log an error
+                Log.e(TAG, "Location callback was null");
+            }
+        });
+
+        locationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+            @NonNull
+            @Override
+            public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                return null;
+            }
+
+            @Override
+            public boolean isCancellationRequested() {
+                return false;
+            }
+        });
+
+        geocoder=new Geocoder(getApplicationContext(), Locale.getDefault());
+        LocationRequest locationRequest= LocationRequest.create();
+        locationRequest.setInterval(LOCATION_POLLING_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationCallback locationCallback = new LocationCallback()
+        {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                try {
+                    String address = geocoder.getFromLocation(
+                                    locationResult.getLastLocation().getLatitude(),
+                                    locationResult.getLastLocation().getLongitude(),
+                                    1)
+                            .get(0)
+                            .getAddressLine(0);
+                    Log.i(TAG,"Repeating current location is: "+address);
+                }catch (IOException ioe){
+                    Log.e(TAG, "Could not get subscribed location: "+ioe.getMessage(), ioe);
+                }
+            }
+        };
+
+        locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+
+
+
         setUpSpinners();
-        setUpSaveButton();
+        saveTask();
         setUpAddImageButton();
         setUpDeleteImageButton();
         updateImageButtons();
@@ -150,56 +244,126 @@ public class AddTask extends AppCompatActivity {
         ));
     }
 
-    private void setUpSaveButton() {
-        Button saveButton = findViewById(R.id.addTaskButton);
-        saveButton.setOnClickListener(v -> {
-            saveTask(s3ImageKey);
-        });
-    }
+//    private void setUpSaveButton() {
+//        Button saveButton = findViewById(R.id.addTaskButton);
+//        saveButton.setOnClickListener(v -> {
+//            saveTask(s3ImageKey);
+//        });
+//    }
 
-    private void saveTask(String imageS3Key) {
+    private void saveTask() {
         Button submitTask = findViewById(R.id.addTaskButton);
         submitTask.setOnClickListener(view -> {
-            try {
-                String task = ((EditText) findViewById(R.id.titleEditText)).getText().toString();
-                String description = ((EditText) findViewById(R.id.descriptionEditText)).getText().toString();
-                String selectTeam = teamSpinner.getSelectedItem().toString();
+//            try {
+//                String task = ((EditText) findViewById(R.id.titleEditText)).getText().toString();
+//                String description = ((EditText) findViewById(R.id.descriptionEditText)).getText().toString();
+//                String selectTeam = teamSpinner.getSelectedItem().toString();
+//
+//                List<Team> teams = teamFuture.get();
+//
+//                Team selectedContact = teams.stream()
+//                        .filter(c -> c.getName().equals(selectTeam))
+//                        .findAny()
+//                        .orElseThrow(() -> new RuntimeException("Selected team not found"));
+//
+//                Task newTask = Task.builder()
+//                        .title(task)
+//                        .body(description)
+//                        .state((TaskState) addStateSpinner.getSelectedItem())
+//                        .teamTask(selectedContact)
+//                        .taskImageS3Key(imageS3Key)
+//                        .build();
+//
+//                Amplify.API.mutate(
+//                        ModelMutation.create(newTask),
+//                        successResponse -> {
+//                            Log.i(TAG, "AddTask.onCreate(): task created");
+//                            Intent bb = new Intent(AddTask.this, MainActivity.class);
+//                            startActivity(bb);
+//                            Snackbar.make(findViewById(R.id.addTask), "Task saved!", Snackbar.LENGTH_SHORT).show();
+//                        },
+//                        failureResponse -> {
+//                            Log.e(TAG, "AddTask.onCreate(): task failed", failureResponse);
+//                            Snackbar.make(findViewById(R.id.addTask), "Failed to save task", Snackbar.LENGTH_SHORT).show();
+//                        }
+//                );
+//
+//            } catch (Exception e) {
+//                Log.e(TAG, "Error adding task", e);
+//                Snackbar.make(findViewById(R.id.addTask), "Error adding task", Snackbar.LENGTH_SHORT).show();
+//            }
 
-                List<Team> teams = teamFuture.get();
-
-                Team selectedContact = teams.stream()
-                        .filter(c -> c.getName().equals(selectTeam))
-                        .findAny()
-                        .orElseThrow(() -> new RuntimeException("Selected team not found"));
-
-                Task newTask = Task.builder()
-                        .title(task)
-                        .body(description)
-                        .state((TaskState) addStateSpinner.getSelectedItem())
-                        .teamTask(selectedContact)
-                        .taskImageS3Key(imageS3Key)
-                        .build();
-
-                Amplify.API.mutate(
-                        ModelMutation.create(newTask),
-                        successResponse -> {
-                            Log.i(TAG, "AddTask.onCreate(): task created");
-                            Intent bb = new Intent(AddTask.this, MainActivity.class);
-                            startActivity(bb);
-                            Snackbar.make(findViewById(R.id.addTask), "Task saved!", Snackbar.LENGTH_SHORT).show();
-                        },
-                        failureResponse -> {
-                            Log.e(TAG, "AddTask.onCreate(): task failed", failureResponse);
-                            Snackbar.make(findViewById(R.id.addTask), "Failed to save task", Snackbar.LENGTH_SHORT).show();
-                        }
-                );
-
-            } catch (Exception e) {
-                Log.e(TAG, "Error adding task", e);
-                Snackbar.make(findViewById(R.id.addTask), "Error adding task", Snackbar.LENGTH_SHORT).show();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
             }
+            String name = ((EditText) findViewById(R.id.titleEditText)).getText().toString();
+            String description = ((EditText) findViewById(R.id.descriptionEditText)).getText().toString();
+            String selectedContactString = teamSpinner.getSelectedItem().toString();
+
+            List<Team> contacts = null;
+            try {
+                contacts = teamFuture.get();
+            } catch (InterruptedException ie) {
+                Log.e(TAG, " InterruptedException while getting contacts");
+            } catch (ExecutionException ee) {
+                Log.e(TAG, " ExecutionException while getting contacts");
+            }
+//            Team selectedContact = contacts.stream().filter(c -> c.getName().equals(selectedContactString)).findAny().orElseThrow(RuntimeException::new);
+            Team selectedContact = contacts.stream().filter(c -> c.getName().equals(selectedContactString)).findAny().orElseThrow(RuntimeException::new);
+            locationProviderClient.getLastLocation().addOnSuccessListener(location ->
+                            {
+                                if (location == null) {
+                                    Log.e(TAG, "Location CallBack was null");
+                                }
+                                String currentLatitude = Double.toString(location.getLatitude());
+                                String currentLongitude = Double.toString(location.getLongitude());
+                                Log.i(TAG, "Our userLatitude: " + location.getLatitude());
+                                Log.i(TAG, "Our userLongitude: " + location.getLongitude());
+                                saveProduct(name, description, currentLatitude, currentLongitude, selectedContact);
+
+                            }
+
+                    ).addOnCanceledListener(() ->
+                    {
+                        Log.e(TAG, "Location request was Canceled");
+                    })
+                    .addOnFailureListener(failure ->
+                    {
+                        Log.e(TAG, "Location request failed, Error was: " + failure.getMessage(), failure.getCause());
+                    })
+                    .addOnCompleteListener(complete ->
+                    {
+                        Log.e(TAG, "Location request Completed");
+                    });
         });
     }
+
+    private void saveProduct(String name, String description, String latitude, String longitude, Team selectedContact) {
+        Task newProduct = Task.builder()
+                .title(name)
+                .body(description)
+                .state((TaskState) taskStatusSpinner.getSelectedItem())
+                .taskLatitude(latitude)
+                .taskLatitude(longitude)
+                .teamTask(selectedContact)
+                .taskImageS3Key("")
+                .build();
+
+        Amplify.API.mutate(
+                ModelMutation.create(newProduct),
+                successResponse -> Log.i(TAG, "AddProductActivity.onCreate(): made a product successfully"),//success response
+                failureResponse -> Log.e(TAG, "AddProductActivity.onCreate(): failed with this response" + failureResponse)// in case we have a failed response
+        );
+        Snackbar.make(findViewById(R.id.addTask), "Product saved!", Snackbar.LENGTH_SHORT).show();
+    }
+
 
     private void setUpAddImageButton() {
         Button addImageButton = findViewById(R.id.editProductAddImageButton);
@@ -228,7 +392,7 @@ public class AddTask extends AppCompatActivity {
             ImageView productImageView = findViewById(R.id.editProductImageImageView);
             productImageView.setImageResource(android.R.color.transparent);
 
-            saveTask("");
+            saveTask();
             switchFromDeleteButtonToAddButton(deleteImageButton);
         });
     }
@@ -291,7 +455,7 @@ public class AddTask extends AppCompatActivity {
                 success ->
                 {
                     Log.i(TAG, "Succeeded in getting file uploaded to S3! Key is: " + success.getKey());
-                    saveTask(success.getKey());
+                    saveTask();
                     updateImageButtons();
                     ImageView productImageView = findViewById(R.id.editProductImageImageView);
                     InputStream pickedImageInputStreamCopy = null;
@@ -338,7 +502,9 @@ public class AddTask extends AppCompatActivity {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
             } finally {
-                cursor.close();
+                if (cursor != null) {
+                    cursor.close();
+                }
             }
         }
         if (result == null) {
@@ -361,4 +527,7 @@ public class AddTask extends AppCompatActivity {
         }
         return null;
     }
+
+
 }
+
