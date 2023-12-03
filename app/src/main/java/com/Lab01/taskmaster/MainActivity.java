@@ -3,6 +3,7 @@ package com.Lab01.taskmaster;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.amplifyframework.analytics.AnalyticsEvent;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
 
         //>>>>>>>>>>>>>>>>>>>>>>Lab36<<<<<<<<<<<<<<<<<<<<<<
 
@@ -153,6 +156,17 @@ public class MainActivity extends AppCompatActivity {
         AllTasksButton();
         SettingsButton();
         setUpLoginAndLogoutButton ();
+    }
+
+    private void init() {
+
+        AnalyticsEvent event = AnalyticsEvent.builder()
+                .name("openedApp")
+                .addProperty("time", Long.toString(new Date().getTime()))
+                .addProperty("trackingEvent", " main activity opened")
+                .build();
+
+        Amplify.Analytics.recordEvent(event);
     }
 
     // Shared Preference
